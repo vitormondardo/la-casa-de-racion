@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# La Casa de Racion — site
 
-## Getting Started
+Catálogo com pedidos via WhatsApp. Next.js 16 (App Router, Cache Components) + TypeScript + Tailwind CSS v4 + Motion.
 
-First, run the development server:
+## Rodar
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Copie `.env.example` para `.env.local` e ajuste `NEXT_PUBLIC_SITE_URL` (usado em SEO, sitemap e Open Graph).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Onde editar
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| O quê | Arquivo |
+| --- | --- |
+| Telefone, horários, endereço | `src/lib/site.ts` |
+| Produtos e preços (exemplos!) | `src/data/products.ts` — validado com Zod no build |
+| Cores e fontes | `src/app/globals.css` (`@theme`) e `src/app/layout.tsx` |
+| Mensagem do WhatsApp | `src/features/whatsapp/message.ts` |
+| Logo | `public/logo/logo.png` |
 
-## Learn More
+As fotos da home e de /sobre são exemplos do Unsplash; ao trocá-las por fotos próprias em `public/images`, remova `images.remotePatterns` de `next.config.ts`.
 
-To learn more about Next.js, take a look at the following resources:
+## Estrutura
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+  app/              rotas: /, /produtos, /sobre, /entrega, sitemap, robots
+  components/       ui/ (botões, ícones), layout/ (header, footer), home/, motion/
+  features/
+    catalog/        filtros, card e embalagem ilustrada dos produtos
+    cart/           reducer, provider (localStorage) e drawer
+    whatsapp/       montagem da mensagem e do link wa.me
+  data/products.ts
+  lib/              site.ts, validations.ts, utils.ts
+tests/
+  unit/             Vitest
+  e2e/              Playwright (desktop + mobile 390px)
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Qualidade
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run typecheck && npm run lint && npm test
+npm run test:e2e     # faz build e sobe o servidor na porta 3100
+```
