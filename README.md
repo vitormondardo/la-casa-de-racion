@@ -32,7 +32,7 @@ src/
   features/
     catalog/        filtros, card e embalagem ilustrada dos produtos
     cart/           reducer, provider (localStorage) e drawer
-    whatsapp/       montagem da mensagem e do link wa.me
+    whatsapp/       montagem da mensagem e do link api.whatsapp.com
   data/products.ts
   lib/              site.ts, validations.ts, utils.ts
 tests/

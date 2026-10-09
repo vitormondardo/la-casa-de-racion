@@ -21,7 +21,7 @@ test("home → filtrar gatos → carrinho → link do WhatsApp com os itens", as
   await expect(drawer.getByTestId("cart-total")).toHaveText("R$ 191,80");
 
   const href = await drawer.getByTestId("cart-whatsapp").getAttribute("href");
-  expect(href).toMatch(/^https:\/\/wa\.me\/5547988142917\?text=/);
+  expect(href).toMatch(/^https:\/\/api\.whatsapp\.com\/send\?phone=5547988142917&text=/);
   const text = decodeURIComponent(new URL(href!).searchParams.get("text")!);
   expect(text).toContain("1x Ração Gatos Castrados (10 kg)");
   expect(text).toContain("1x Areia Sanitária Granulada (4 kg)");

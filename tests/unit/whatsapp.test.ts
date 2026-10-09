@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildWhatsAppMessage, buildWhatsAppUrl } from "@/features/whatsapp/message";
+import { buildWhatsAppMessage, buildWhatsAppUrl, toWhatsAppPhone } from "@/features/whatsapp/message";
 
 describe("buildWhatsAppMessage", () => {
   it("gera saudação genérica quando não há itens", () => {
@@ -17,13 +17,26 @@ describe("buildWhatsAppMessage", () => {
   });
 });
 
-describe("buildWhatsAppUrl", () => {
-  it("usa só dígitos do número e codifica a mensagem", () => {
-    const url = buildWhatsAppUrl("Olá & tchau\nlinha 2", "+55 (47) 98814-2917");
-    expect(url).toBe("https://wa.me/5547988142917?text=Ol%C3%A1%20%26%20tchau%0Alinha%202");
+describe("toWhatsAppPhone", () => {
+  it("adiciona o 55 a números com DDD", () => {
+    expect(toWhatsAppPhone("47988142917")).toBe("5547988142917");
+    expect(toWhatsAppPhone("(47) 3333-4444")).toBe("554733334444");
   });
 
-  it("omite o texto quando não há mensagem", () => {
-    expect(buildWhatsAppUrl(undefined, "5547988142917")).toBe("https://wa.me/5547988142917");
+  it("mantém números que já têm código do país", () => {
+    expect(toWhatsAppPhone("+55 (47) 98814-2917")).toBe("5547988142917");
+  });
+});
+
+describe("buildWhatsAppUrl", () => {
+  it("usa api.whatsapp.com e codifica a mensagem", () => {
+    const url = buildWhatsAppUrl("Olá & tchau\nlinha 2", "47988142917");
+    expect(url).toBe(
+      "https://api.whatsapp.com/send?phone=5547988142917&text=Ol%C3%A1%20%26%20tchau%0Alinha%202",
+    );
+  });
+
+  it("usa o número da loja por padrão e omite o texto sem mensagem", () => {
+    expect(buildWhatsAppUrl()).toBe("https://api.whatsapp.com/send?phone=5547988142917");
   });
 });
